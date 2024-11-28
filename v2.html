@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ultimate Scientific Calculator</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333333;
+      --btn-bg: #f1f1f1;
+      --btn-hover: #e2e2e2;
+      --operation-bg: #007bff;
+      --operation-hover: #0056b3;
+      --special-bg: #6c757d;
+      --special-hover: #555b65;
+      --equals-bg: #28a745;
+      --equals-hover: #1d8034;
+      --clear-bg: #dc3545;
+      --clear-hover: #b22a3b;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1e1e2f;
+      --text-color: #f9f9f9;
+      --btn-bg: #3b3b4d;
+      --btn-hover: #50505e;
+      --operation-bg: #5468ff;
+      --operation-hover: #3d4bff;
+      --special-bg: #77777a;
+      --special-hover: #5c5c5f;
+      --equals-bg: #56c867;
+      --equals-hover: #3aa94a;
+      --clear-bg: #ff5b5b;
+      --clear-hover: #d14343;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 95%;
+      margin: 20px;
+    }
+
+    .theme-toggle {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 10px;
+    }
+
+    .theme-toggle button {
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: var(--operation-bg);
+      color: var(--text-color);
+      transition: background 0.3s ease;
+    }
+
+    .theme-toggle button:hover {
+      background-color: var(--operation-hover);
+    }
+
+    .calculator {
+      background: var(--bg-color);
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .display {
+      width: 100%;
+      height: 70px;
+      font-size: 1.8em;
+      text-align: right;
+      border: none;
+      border-radius: 10px;
+      background: var(--btn-bg);
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+      color: var(--text-color);
+
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    button {
+      padding: 15px;
+      font-size: 1.2em;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: var(--btn-bg);
+      color: var(--text-color);
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background-color: var(--btn-hover);
+    }
+
+    button.operation {
+      background-color: var(--operation-bg);
+      color: white;
+    }
+
+    button.operation:hover {
+      background-color: var(--operation-hover);
+    }
+
+    button.special {
+      background-color: var(--special-bg);
+      color: white;
+    }
+
+    button.special:hover {
+      background-color: var(--special-hover);
+    }
+
+    button.clear {
+      background-color: var(--clear-bg);
+      color: white;
+    }
+
+    button.clear:hover {
+      background-color: var(--clear-hover);
+    }
+
+    button.equals {
+      background-color: var(--equals-bg);
+      color: white;
+      grid-column: span 2;
+    }
+
+    button.equals:hover {
+      background-color: var(--equals-hover);
+    }
+
+    @media (max-width: 600px) {
+      .display {
+        font-size: 1.5em;
+        height: 60px;
+      }
+
+      button {
+        padding: 12px;
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="theme-toggle">
+      <button id="theme-toggle-btn">Dark Theme</button>
+    </div>
+    <div class="calculator">
+      <input type="text" id="display" class="display" disabled placeholder="0">
+      <div class="buttons">
+        <button class="clear" onclick="clearDisplay()">AC</button>
+        <button class="special" onclick="backspace()">DEL</button>
+        <button class="special" onclick="calculateTrig('sin')">sin</button>
+        <button class="special" onclick="calculateTrig('cos')">cos</button>
+        <button class="special" onclick="calculateTrig('tan')">tan</button>
+        <button class="number" onclick="appendNumber('7')">7</button>
+        <button class="number" onclick="appendNumber('8')">8</button>
+        <button class="number" onclick="appendNumber('9')">9</button>
+        <button class="operation" onclick="appendOperation('/')">÷</button>
+        <button class="special" onclick="appendOperation('Math.log')">ln</button>
+        <button class="number" onclick="appendNumber('4')">4</button>
+        <button class="number" onclick="appendNumber('5')">5</button>
+        <button class="number" onclick="appendNumber('6')">6</button>
+        <button class="operation" onclick="appendOperation('*')">×</button>
+        <button class="special" onclick="appendOperation('Math.sqrt')">√</button>
+        <button class="number" onclick="appendNumber('1')">1</button>
+        <button class="number" onclick="appendNumber('2')">2</button>
+        <button class="number" onclick="appendNumber('3')">3</button>
+        <button class="operation" onclick="appendOperation('-')">−</button>
+        <button class="special" onclick="appendOperation('**')">x²</button>
+        <button class="number" onclick="appendNumber('0')">0</button>
+        <button class="number" onclick="appendNumber('.')">.</button>
+        <button class="operation" onclick="appendOperation('+')">+</button>
+        <button class="equals" onclick="calculate()">=</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentNumber = '';
+    let previousNumber = '';
+    let operation = null;
+
+    const display = document.getElementById('display');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const root = document.documentElement;
+
+    function appendNumber(number) {
+      if (currentNumber.length > 12) return;
+      currentNumber += number;
+      updateDisplay();
+    }
+
+    function appendOperation(op) {
+      if (currentNumber === '') return;
+      if (previousNumber !== '') calculate();
+      operation = op;
+      previousNumber = currentNumber;
+      currentNumber = '';
+    }
+
+    function calculate() {
+      try {
+        let result;
+        if (operation.includes('Math')) {
+          result = eval(`${operation}(${currentNumber})`);
+        } else {
+          result = eval(`${previousNumber} ${operation} ${currentNumber}`);
+        }
+        currentNumber = result.toString().slice(0, 12);
+        operation = null;
+        previousNumber = '';
+        updateDisplay();
+      } catch {
+        currentNumber = 'Error';
+        updateDisplay();
+      }
+    }
+
+    function calculateTrig(func) {
+      if (!currentNumber) return;
+      const value = parseFloat(currentNumber);
+      let result = 0;
+      switch (func) {
+        case 'sin': result = Math.sin((value * Math.PI) / 180); break;
+        case 'cos': result = Math.cos((value * Math.PI) / 180); break;
+        case 'tan': result = Math.tan((value * Math.PI) / 180); break;
+      }
+      currentNumber = result.toString().slice(0, 12);
+      updateDisplay();
+    }
+
+    function backspace() {
+      currentNumber = currentNumber.slice(0, -1);
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      currentNumber = '';
+      previousNumber = '';
+      operation = null;
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      display.value = currentNumber || '0';
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      if (root.hasAttribute('data-theme')) {
+        root.removeAttribute('data-theme');
+        themeToggleBtn.textContent = 'Dark Theme';
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        themeToggleBtn.textContent = 'Light Theme';
+      }
+    });
+  </script>
+</body>
+</html>
